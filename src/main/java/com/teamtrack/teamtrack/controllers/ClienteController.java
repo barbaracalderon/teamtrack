@@ -1,4 +1,4 @@
-package com.teamtrack.teamtrack;
+package com.teamtrack.teamtrack.controllers;
 
 import com.teamtrack.teamtrack.datasource.entities.ClienteEntity;
 import com.teamtrack.teamtrack.dtos.RequestClienteDTO;
