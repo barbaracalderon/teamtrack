@@ -1,12 +1,16 @@
 package com.teamtrack.teamtrack.services;
 
+import com.teamtrack.teamtrack.datasource.entities.AtividadeEntity;
 import com.teamtrack.teamtrack.datasource.entities.ProjetoEntity;
 import com.teamtrack.teamtrack.datasource.entities.ClienteEntity;
 import com.teamtrack.teamtrack.datasource.entities.StatusEnum;
 import com.teamtrack.teamtrack.datasource.repositories.ProjetoRepository;
 import com.teamtrack.teamtrack.dtos.RequestProjetoDTO;
+import com.teamtrack.teamtrack.dtos.ResponseAtividadeDTO;
 import com.teamtrack.teamtrack.dtos.ResponseProjetoDTO;
+import com.teamtrack.teamtrack.dtos.ResponseProjetoEmAbertoDTO;
 import com.teamtrack.teamtrack.exceptions.ProjetoExistenteException;
+import com.teamtrack.teamtrack.exceptions.ProjetoNotFoundException;
 import com.teamtrack.teamtrack.interfaces.ProjetoInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +23,17 @@ public class ProjetoService implements ProjetoInterface {
 
     private final ProjetoRepository projetoRepository;
     private final ClienteService clienteService;
+    private final AtividadeService atividadeService;
 
     @Autowired
     public ProjetoService(
             ProjetoRepository projetoRepository,
-            ClienteService clienteService
+            ClienteService clienteService,
+            AtividadeService facadeService
     ) {
         this.projetoRepository = projetoRepository;
         this.clienteService = clienteService;
+        this.atividadeService = facadeService;
     }
 
     @Override
@@ -74,5 +81,41 @@ public class ProjetoService implements ProjetoInterface {
                 .collect(Collectors.toList());
     }
 
+    public ProjetoEntity buscarProjetoPorId(Long id) {
+        return projetoRepository.findById(id)
+                .orElseThrow(() -> new ProjetoNotFoundException("Id do Projeto não encontrado: " + id));
+    }
+
+    public List<ProjetoEntity> listarProjetosEmAberto() {
+        List<ProjetoEntity> projetoEntityList = buscarProjetosPorStatusProjeto(StatusEnum.EM_ABERTO);
+        if (projetoEntityList.isEmpty()) {
+            throw new ProjetoNotFoundException("Nenhum projeto com status 'EM_ABERTO'.");
+        } else {
+            return projetoEntityList;
+        }
+    }
+
+    private List<ProjetoEntity> buscarProjetosPorStatusProjeto(StatusEnum statusProjeto) {
+        return projetoRepository.findByStatusProjeto(statusProjeto);
+    }
+
+    public ResponseProjetoEmAbertoDTO criarResponseProjetoEmAbertoDTO(ProjetoEntity projetoEntitySalvo) {
+        ClienteEntity clienteEntity = clienteService.buscarClientePorId(projetoEntitySalvo.getIdCliente());
+        List<AtividadeEntity> atividadeEntityList = atividadeService.buscarAtividadesPorIdProjeto(projetoEntitySalvo.getId());
+        List<ResponseAtividadeDTO> responseAtividadeDTOList = atividadeService.criarResponseAtividadeDTO(atividadeEntityList);
+        return new ResponseProjetoEmAbertoDTO(
+                projetoEntitySalvo.getId(),
+                projetoEntitySalvo.getNomeProjeto(),
+                clienteEntity.getNomeCliente(),
+                responseAtividadeDTOList
+        );
+
+    }
+
+    public List<ResponseProjetoEmAbertoDTO> criarResponseProjetoEmAbertoDTO(List<ProjetoEntity> projetoEntityList) {
+        return projetoEntityList.stream()
+                .map(this::criarResponseProjetoEmAbertoDTO)
+                .collect(Collectors.toList());
+    }
 
 }

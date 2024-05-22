@@ -16,21 +16,16 @@ import java.util.stream.Collectors;
 public class AtividadeService implements AtividadeInterface {
 
     private final AtividadeRepository atividadeRepository;
-    private final ProjetoService projetoService;
 
     @Autowired
     public AtividadeService(
-            AtividadeRepository atividadeRepository,
-            ProjetoService projetoService
+            AtividadeRepository atividadeRepository
     ) {
         this.atividadeRepository = atividadeRepository;
-        this.projetoService = projetoService;
     }
 
     @Override
     public AtividadeEntity criarAtividade(RequestAtividadeDTO requestAtividadeDTO) {
-        ProjetoEntity projetoEntity = projetoService.buscarProjetoPorId(requestAtividadeDTO.idProjeto());
-
         AtividadeEntity atividadeEntity = criarAtividadeEntity(requestAtividadeDTO);
         return atividadeRepository.save(atividadeEntity);
     }
@@ -58,6 +53,10 @@ public class AtividadeService implements AtividadeInterface {
         return atividadeEntityList.stream()
                 .map(this::criarResponseAtividadeDTO)
                 .collect(Collectors.toList());
+    }
+
+    public List<AtividadeEntity> buscarAtividadesPorIdProjeto(Long idProjeto){
+        return atividadeRepository.findAllByIdProjeto(idProjeto);
     }
 
 }

@@ -1,11 +1,13 @@
 package com.teamtrack.teamtrack.controllers;
 
 import com.teamtrack.teamtrack.datasource.entities.AtividadeEntity;
+import com.teamtrack.teamtrack.datasource.entities.ProjetoEntity;
 import com.teamtrack.teamtrack.dtos.RequestAtividadeDTO;
 import com.teamtrack.teamtrack.dtos.ResponseAtividadeDTO;
 import com.teamtrack.teamtrack.exceptions.ProjetoNotFoundException;
 
 import com.teamtrack.teamtrack.services.AtividadeService;
+import com.teamtrack.teamtrack.services.ProjetoService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +24,15 @@ public class AtividadeController {
 
     @Autowired
     private AtividadeService atividadeService;
+    @Autowired
+    private ProjetoService projetoService;
 
     @PostMapping
     public ResponseEntity<?> criarAtividade(@Valid @RequestBody RequestAtividadeDTO requestAtividadeDTO) {
 
         try {
             log.info("POST /atividades ---> Chamada para o método.");
-
+            ProjetoEntity projetoEntity = projetoService.buscarProjetoPorId(requestAtividadeDTO.idProjeto());
             AtividadeEntity atividadeEntitySalvo = atividadeService.criarAtividade(requestAtividadeDTO);
             ResponseAtividadeDTO responseAtividadeDTO = atividadeService.criarResponseAtividadeDTO(atividadeEntitySalvo);
 
