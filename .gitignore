@@ -35,4 +35,3 @@ build/
 ### TeamTrack ###
 .mvn/
 src/main/resources/application.properties
-src/test/
