@@ -25,10 +25,10 @@ public class ProjetoEntity {
 
     public ProjetoEntity(String nomeProjeto, String statusProjeto, Long idCliente) {
         if (!isValidStatusProjeto(statusProjeto)){
-            throw new IllegalArgumentException(("Nome do status inválido: " + statusProjeto));
+            throw new IllegalArgumentException(("Nome do status do projeto inválido: " + statusProjeto));
         }
-        this.statusProjeto = StatusEnum.valueOf(statusProjeto);
         this.nomeProjeto = nomeProjeto;
+        this.statusProjeto = StatusEnum.valueOf(statusProjeto);
         this.idCliente = idCliente;
     }
 

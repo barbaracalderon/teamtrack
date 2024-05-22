@@ -4,6 +4,7 @@ import com.teamtrack.teamtrack.datasource.entities.ClienteEntity;
 import com.teamtrack.teamtrack.datasource.repositories.ClienteRepository;
 import com.teamtrack.teamtrack.dtos.RequestClienteDTO;
 import com.teamtrack.teamtrack.dtos.ResponseClienteDTO;
+import com.teamtrack.teamtrack.exceptions.ClienteNotFoundException;
 import com.teamtrack.teamtrack.interfaces.ClienteInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,5 +51,10 @@ public class ClienteService implements ClienteInterface {
         return clienteEntityList.stream()
                 .map(this::criarResponseClienteDTO)
                 .collect(Collectors.toList());
+    }
+
+    public ClienteEntity buscarClientePorId(Long id) {
+        return clienteRepository.findById(id)
+                .orElseThrow(() -> new ClienteNotFoundException("Id do Cliente não encontrado: " + id));
     }
 }
