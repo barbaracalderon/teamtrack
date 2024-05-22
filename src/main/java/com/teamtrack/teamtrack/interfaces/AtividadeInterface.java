@@ -9,4 +9,6 @@ public interface AtividadeInterface {
     AtividadeEntity criarAtividade(RequestAtividadeDTO requestAtividadeDTO);
 
     List<AtividadeEntity> listarAtividades();
+
+    List<AtividadeEntity> buscarAtividadesPorIdProjeto(Long idProjeto);
 }
