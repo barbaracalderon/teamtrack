@@ -11,8 +11,6 @@ import ProjectList from './components/ProjectList.vue';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-
-
 export default {
   components: {
     ProjectList
@@ -22,22 +20,16 @@ export default {
 
 <style>
 #app {
-  padding: 40px;
-  min-height: 100%;
-  min-width: 100%;
   display: flex;
-  flex-direction: column;
-}
-html, body {
-    height: 100%;
-    margin: 0;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  width: 100vh;
 }
 .container {
-  width: 100%;
   max-width: 800px;
-  padding: 50px;
-  background: rgb(232, 236, 241);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
 }
 </style>
