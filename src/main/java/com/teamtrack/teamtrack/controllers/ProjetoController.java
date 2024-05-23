@@ -21,6 +21,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("projetos")
+@CrossOrigin(origins = "http://localhost:5173/")
 public class ProjetoController {
 
     @Autowired
